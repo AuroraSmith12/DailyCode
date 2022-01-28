@@ -1,0 +1,74 @@
+#include<stdio.h>
+#include<stddef.h>
+//#pragma pack (1)
+////struct s3
+////{
+////	double d;
+////	char c;
+////	int i;
+////};
+////struct s4
+////{
+////	char c1;
+////	struct s3 p1;
+////	double d;
+////};
+////int main()
+////{
+////	printf("%d\n", sizeof(struct s4));
+////	return 0;
+////}
+//struct s 
+//{
+//	char c1;
+//
+//	double d;
+//};
+//#pragma pack()
+//int main()
+//{
+//	printf("%d\n", sizeof(struct s));
+//	return 0;
+//}
+//struct s
+//{
+//	char c;
+//	int i;
+//	double d;
+//};
+////void Init(struct s tmp)
+////{
+////	tmp.c = 'w';
+////	tmp.i = 100;
+////	tmp.d = 3.14;
+////}
+//void Init(struct s*ps)
+//{
+//	ps->c = 'w';
+//	ps->d = 3.14;
+//	ps->i = 100;
+//}
+//int main()
+//{
+//	/*printf("%d\n", offsetof(struct s, c));
+//	printf("%d\n", offsetof(struct s, i));
+//	printf("%d\n", offsetof(struct s, d));*/
+//	struct s p1 = { 0 };
+//	Init(&p1);
+//	printf("%d\n", p1.i);
+//	return 0;
+//}
+struct S
+{
+	int a : 2;
+	int b : 5;
+	int c : 10;
+	int d : 30;
+
+};
+int main()
+{
+	struct S s;
+	printf("%d\n", sizeof(s));
+	return 0;
+}
