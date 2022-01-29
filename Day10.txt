@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+//int main()
+//{
+//	//int*p = (int*)malloc(10 * sizeof(int));
+//	int *p = malloc(40);
+//	if (p == NULL)
+//	{
+//		printf("%s\n", strerror(errno));
+//	}
+//	else
+//	{
+//		int i = 0;
+//		for (i = 0; i < 10; i++)
+//		{
+//			*(p + i) = i;
+//		}
+//		for (i = 0; i < 10; i++)
+//		{
+//			printf("%d  ", *(p + i));
+//		}
+//	}
+//	free(p);
+//	p = NULL;
+//	
+//	return 0;
+//}
+int main()
+{
+	/*int*p = (int*)malloc(5 * sizeof(int));
+	if (p == NULL)
+	{
+		return 0;
+	}
+	else
+	{
+		int i = 0;
+		for (i = 0; i < 10; i++)
+		{
+			*(p + i) = i;
+		}
+		free(p);
+		p = NULL;*/
+
+	//}
+	/*int a = 10;
+	int*p = &a;
+	free(p);
+	p = NULL;*/
+	while (1)
+	{
+		malloc(1);
+		free;
+	}
+	return 0;
+}
