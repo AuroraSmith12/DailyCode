@@ -1,0 +1,71 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<string.h>
+#include<errno.h>
+#include<stdlib.h>
+//int main()
+//{
+//	FILE*pf = fopen("test.txt", "w");
+//	if (pf == NULL)
+//	{
+//		printf("%s\n", errno);
+//		return 0;
+//	}
+//	fclose(pf);
+//	pf = NULL;
+//	return 0;
+//}
+////#include<stdio.h>
+////int main()
+////{
+////	return 0;
+////}
+//int main()
+//{
+//	FILE*pfwrite = fopen("test.txt", "w");
+//	if (pfwrite == NULL)
+//	{
+//		printf("%s\n", strerror(errno));
+//	}
+//	fputc('b', pfwrite);
+//	fputc('i', pfwrite);
+//	fputc('t', pfwrite);
+//	fclose(pfwrite);
+//	pfwrite = NULL;
+//	return 0;
+//}
+//int main()
+//{
+//	FILE*pfRead = fopen("test.txt", "r");
+//	if (pfRead == NULL)
+//	{
+//		printf("%s\n", strerror(errno));
+//		return 0;
+//	}
+//	//读文件
+//	printf("%c", fgetc(pfRead));
+//	printf("%c", fgetc(pfRead));
+//	printf("%c", fgetc(pfRead));
+//	fclose(pfRead);
+//	pfRead = NULL;
+//}
+struct S
+{
+	int n;
+	float source;
+	char arr[10];
+};
+int main()
+{
+	struct S s = { 100, 3.14f, "bit" };
+	FILE*pf = fopen("test.txt", "w");
+	if (pf == NULL)
+	{
+		return 0;
+
+	}
+	fprintf(pf, "%d %f %s", s.n, s.source, s.arr);
+	fclose(pf);
+	pf = NULL;
+	return 0;
+}
