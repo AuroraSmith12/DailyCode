@@ -1,0 +1,166 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include<stdio.h>
+
+#define  _CRT_SECURE_NO_WARNINGS
+#include<windows.h>
+
+
+//int main()
+//{
+	/*int a = 0;
+	int b = 0;
+	int c = 0;
+	int max = 0;
+	scanf_s("%d %d %d", &a, &b, &c);
+	if (a > b)
+	{
+		max = a;
+	}
+	else
+	{
+		max = b;
+	}
+	if (c > max)
+	{
+		max = c;
+	}
+	printf("最大值为：%d", max);
+	system("pause");*/
+	/*char ch = 'a';
+	printf("%c\n", ch);
+	printf("%d\n", ch);*/
+	/*int a, i;
+	a = 6;
+	for (i = 1; i <= 3; i++)
+	{
+		printf("%d", a);
+	}
+	return 0;*/
+	/*class A {
+	public:
+		int m;
+		void print() { cout << "A\n"; }
+	};
+
+	int main() {
+		A *pa = 0;
+		pa->print();
+	}*/
+//}
+
+//int main()
+//{
+	/*char a[7] = "abcde";
+	char b[4] = "ABC";
+	strcpy (a, b);
+	printf("%c", a[4]);*/
+	/*int a = 1;
+	int i ;
+	while (i = 0, i < 5, i++)
+	{
+		a++;
+		
+	}
+	printf("%d\n", a);*/
+	/*int i, sum = 0;
+	printf("please enter i,i=?");
+	scanf("%d", &i);
+	while (i <= 10)
+	{
+		sum = sum + i;
+		i++;
+	}
+	printf("sum=%d\n", sum);*/
+	/*int i, sum = 0;
+	printf("please enter i,i=?");
+	scanf("%d", &i);
+	do
+	{
+		sum = sum + i;
+		i++;
+	} while (i <= 10);
+	printf("sum=%d\n", sum);
+	return 0;
+}*/
+//void main()
+//{
+//	printf("welcome to c profram\n");
+//}
+//int main()
+//{
+//	printf("welcome to C program\n");
+//		return 0;
+//}
+
+//int Add(int a, int b)
+//{
+//	if (a > b)
+//	{
+//		return a;
+//	}
+//	else
+//	{
+//		return b;
+//	}
+//}
+
+//int main()
+//{//半径输入1.5
+//	//float r;
+//	//printf("请输入半径");
+//	//scanf("%f", &r);//半径输入为1.5，则必须用%f,不能用%d
+//	//float d = 3.14;
+//	//double ret = d*r*r;
+//	//printf("圆的面积为：%.2f", ret);
+//	///*printf("%f", d);*/
+//	int x = 5;
+//	int y = 10;
+//	int z=Add(x,y);
+//	printf("最大值为：%d\n", z);
+//	return 0;
+//}
+//int Add(int a, int b, int c)
+//{
+//	int max;
+//	if (a>b)
+//	{
+//		max=a;
+//	}
+//	else
+//	{
+//		max= b;
+//	}
+//	if (c > max)
+//	{
+//		max = c;
+//	}
+//	return max;
+//}
+//
+//int main()//比较三个数中的大小，并输出最大值
+//{
+//	int x, y, z;
+//	//int p = Add(x, y, z);
+//	printf("请输入三个数字\n");
+//	scanf("%d %d %d", &x, &y, &z);
+//	int p = Add(x, y, z);
+//	printf("最大值为：%d\n", p);
+//	return 0;
+//}
+int main()
+{
+	/*int a = 0, b = 0;
+	a = 10;
+	b = 20;
+	printf("a+b=%d\n", a + b);*/
+	/*char ch = 20;
+	printf("%d\n", ch);*/
+	int a, b;
+	a = 20;
+	b = 30;
+	a = 30;
+	int z = a + b;
+	printf("%d\n", z);
+	return 0;
+}
