@@ -1,0 +1,124 @@
+#include<stdio.h>
+//int Add(int x, int y)
+//{
+//	int z = 0;
+//	z = x + y;
+//	return z;
+//}
+//int Add(int c, int d)
+//{
+//	int z = 0;
+//	z = c + d;
+//	return z;
+//}
+//test(int*arr[])
+//{
+//	int i = 0;
+//	for (i = 0; i < 10; i++)
+//	{
+//		printf("%d\n", arr[i]);
+//	}
+//}
+int main()
+{
+	/*int i = 0;
+	for (i = 1; i < 10; i++)
+	{
+
+		if (i == 4)
+
+			continue;
+
+		printf("第%d层到了\n", i);
+		
+	}*/
+	/*int arr1[] = { 1, 2, 3, 4, 5 };
+	int arr2[] = { 2, 3, 4, 5, 6 };
+	int arr3[] = { 3, 4, 5, 6, 7 };
+	int*parr[] = { arr1, arr2, arr3 };
+	int i = 0;
+	for (i = 0; i < 3; i++)
+	{
+		int j = 0;
+		for (j = 0; j < 5; j++)
+		{
+			printf("%d ", *(parr[i] + j));
+		}
+		printf("\n");
+	}*/
+	//char*p = "abcdef";
+	///*printf("%c\n", *p);
+	//printf("%c\n", *(p + 1));*/
+	//int i = 0;
+	//for (i = 0; i < 6; i++)
+	//{
+	//	printf("%c\n", *(p + i));
+	//}
+	//int arr[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	//printf("%d\n", arr[2]);
+	//int(*pa)[10] = &arr;
+	///*int i = 0;
+	//for (i = 0; i < 10; i++)
+	//{
+	//	printf("%d\n", (*pa)[i]);
+	//}*/
+	//(*pa)[2] = 5;
+	//printf("%d\n", (*pa)[2]);
+	//int i = 0;
+	//for (i = 0; i < 10; i++)
+	//{
+	//	printf("%d\n", (*pa)[i]);
+	//}
+	//
+
+	/*
+	int arr[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	test(arr);*/
+	//int i = 1;
+	//char*p = (char*)&i;
+	//if (*p == 1)
+	//{
+	//	printf("小端\n");
+	//}
+	//else
+	//{
+	//	printf("大端\n");
+	//}
+	/*int a = 20;
+	int b = 30;
+	Add(a, b);
+	printf("%d\n", Add(a, b));*/
+
+	//int(*p)(int x, int y) = Add;
+	//printf("%d\n", (*p)(6, 6));
+
+	/*int arr1[3] = { 1, 2, 3 };
+	int arr2[3] = { 4, 5, 6 };
+	int arr3[3] = { 7, 8, 9 };
+	int*pa[] = { arr1, arr2, arr3 };
+	int j = 0;
+	for (j = 0; j < 3; j++)
+	{
+		int i = 0;
+		for (i = 0; i < 3; i++)
+		{
+			printf("%d ", *(pa[j] + i));
+		}
+		printf("\n");
+	}
+*/
+	//int arr[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	//int(*p)[10] = &arr;
+	//printf("%d\n", (*p)[0]);
+	//printf("%d\n", *p[0]);
+	//printf("%d\n", (*p)[2]);
+
+
+	//typedef int uint;
+	//uint a = 10;
+	//printf("%d\n", a);
+
+	int a = 10;
+	printf("%x\n", a);
+	return 0;
+}
