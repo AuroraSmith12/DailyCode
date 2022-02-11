@@ -1,0 +1,153 @@
+#include<stdio.h>
+#include<windows.h>
+//void fun()
+//{
+//	static int i = 3;
+//}
+//int main()
+//{
+	/*int a = 2;
+	int c;
+	c = ~a;
+	printf("%d\n", c);*/
+	/*int a = 1;
+	if (a == 1)
+	{
+		;
+		printf("haha");
+	}
+*/
+
+	/*int i = 1;
+	double p;
+	p = i;
+	printf("%.2f\n", p);*/
+	/*int i = -3;
+	int a =( i >> 1);
+	printf("%d\n", a);
+
+	*/
+	//char c = 1;
+	//printf("%u\n", sizeof( +c));
+	//printf("%u\n", sizeof(1*c));
+	/*fun();
+	printf("%d\n", i);*/
+	/*int i = 4;
+	int*p = &i;
+	*p = 2;
+	printf("%d\n", i);*/
+	/*int a = 0x11223344;
+	char*pc = &a;
+	while (1)
+	{
+		*pc++ = 0;
+		if (a == 0)
+		{
+			break;
+		}
+	}*/
+	//*pc = 0;
+
+	/*int*p;
+	*p = 20;*/
+
+	//int arr[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	//int(*p)[10] = &arr;
+	//(*p)[1] = 0;
+	////printf("%s\n", arr);
+	//int i = 0;
+	//for (i = 0; i < 10; i++)
+	//{
+	//	printf("%d\n", arr[i]);
+	//}
+
+
+	//int i = 10;
+	//int*p = &i;
+	//*p->i;
+
+	//struct stu
+	//{
+	//	int name[20];
+	//	char age[10];
+
+	//};
+	////struct stu p1;
+	//struct stu p1 = { '张三', 19 };
+	//printf("%s\n", p1.name);
+//struct stu
+//{
+//	char name[20];
+//	int age;
+//};
+//void print(struct stu*p1)
+//{
+//	printf("%s  ,  %d\n",p1->name, (*p1).age);
+//}
+//void print1(struct stu p1)
+//{
+//	printf("%s,%d\n", p1.name, p1.age);
+//}
+//void bubble_sort(int arr[], int sz)
+//{
+//	int i = 0;
+//	for (i = 0; i < sz-1; i++)
+//	{
+//		int j = 0;
+//		for (j = 0; j < sz - 1 - i; j++)
+//		{
+//			if (arr[j]>arr[j + 1])
+//			{
+//				int tmp = arr[j];
+//				arr[j] = arr[j + 1];
+//				arr[j + 1] = tmp;
+//			}
+//		}
+//	}
+//}
+int main()
+{
+	/*struct stu p1 = { "张三", 20 };
+	print(&p1);
+	print1(p1);*/
+	/*int arr[10] = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+	int sz = sizeof(arr) / sizeof(arr[0]);
+	bubble_sort(arr, sz);
+	int i = 0;
+	for (i = 0; i < sz; i++)
+	{
+		printf("%d\n", arr[i]);
+	}*/
+	/*int i = 0;
+	for (i = 0; i < sz; i++)
+	{
+		for
+		int tmp = 0;
+		tmp = arr[i];
+		arr[i] = arr[i + 1];
+		arr[i + 1] = tmp;
+	}
+	printf("%s\n", arr);*/
+	/*int i, j;
+	for (i = 1; i < 10; i++)
+	{
+		for (j = 1; j <= i; j++)
+		{
+			printf("%d*%d=%d ", i, j, i*j);
+		}
+		printf("\n");*/
+	//}
+	/*int arr[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	printf("%d\n", arr[0]);*/
+	//int i = 0;
+	//for (i = 0; i < 3; i++)
+	//{
+	//	printf("6");
+	//	system("cls");
+	//	Sleep(500);
+	//}
+	//printf("\n");
+
+
+	return 0;
+}
