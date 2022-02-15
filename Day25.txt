@@ -1,0 +1,67 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+
+#include<stdio.h>
+#include<string.h>
+enum Day
+{
+	Mon,
+	Tues,
+};
+struct Stu
+{
+	char name[20];
+	int age;
+};
+int main()
+{
+	/*char arr[] = "I Am A Student";
+	printf("%s\n", arr);
+	char arr1[] = { 1, 2, 3, 4, 5 };
+	printf("%d\n", *(arr1+1));*/
+
+	/*char buffer[] = "This is a test of the memset function";
+
+	printf("Before: %s\n", buffer);
+	memset(buffer, '*', 5);
+	printf("After:  %s\n", buffer);
+*/
+
+	/*char arr1[] = "student";
+	char arr2[] = "arm";
+	strcpy(arr1, arr2);
+	printf("%s\n", arr1);*/
+	/*int a = 10;
+	int*p = &a;
+	int**pp = &p;
+	printf("%p\n", &a);
+	printf("%p\n", *pp);
+	printf("%d\n", a);
+	**pp = 20;
+	printf("%d\n", a);
+*/
+	//enum Day p1 =Mon;
+	/*struct Stu p1;
+	
+	p1.name[0] = 'a';
+	p1.name[1] = 'b';
+	p1.name[2] = 'c';
+	p1.name[3] = 'd';
+	p1.name[4] = '\0';
+	p1.age = 18;
+	printf("%s  %d \n", p1.name, p1.age);*/
+	/*char*p;
+	p = (char*)malloc(1);
+	*p = 'c';
+	printf("%c\n", *p);
+	free(p);*/
+
+	/*char arr[] = { 0 };
+	strcpy(arr, "nishule");
+	printf("%s\n", arr);*/
+	char p = 0;
+	//p = malloc(1);
+	p = 'a';
+	printf("%c\n", p);
+	return 0;
+}
