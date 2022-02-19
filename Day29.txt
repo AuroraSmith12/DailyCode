@@ -1,0 +1,43 @@
+#include<stdio.h>
+int fa(int n) {
+	int fn = 0;
+	int f1, f2;
+	f1 = f2 = 1;
+	if (n <= 2)
+		return 1;
+	return fa(n - 1) + fa(n - 2);
+}
+int main()
+{
+	//char*p;
+	//char*l;
+	//p = (char*)malloc(1);
+	//*p = 's';
+	//printf("%c\n", *p);
+	////*p = 'pps';
+	////printf("%s\n", *p);
+	//l= realloc(p, 5);
+	//printf("%p\n", l);
+	//printf("%p\n", p);
+	////puts("end");
+	////gets("");
+
+	/*int*p = "niubiplus";
+	printf("%c\n", *p);
+	printf("%c\n", *(p+1));
+	char arr[] = "niubiplus";
+	printf("%s\n", arr);*/
+
+//	1 1 2 3 5 8 13 21 34 55 89 ...
+
+	
+	
+		int n;
+		printf("请输入需要计算第几个数：");
+		scanf_s("%d", &n);
+		int a = fa(n);
+		printf("第%d个数为%d", n, a);
+	
+
+	return 0;
+}
