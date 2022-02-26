@@ -1,0 +1,231 @@
+//智能垃圾桶
+
+#include"reg52.h"
+//距离小于10cm，D5亮，D6灭，反之相反现象
+sbit D5=P3^7;
+sbit D6=P3^6;
+sbit Trig=P1^5;
+`
+sbit Echo=P1^6;
+sbit sg90_con=P1^1;
+sbit SW1=P2^1;
+sbit vibrate=P3^2;
+sbit beep=P2^0;
+int cnt =0;
+double time;
+char jd_back;
+int jd=0;//jd=3：转动90°；jd=4；转动135°
+int vibrate_mark=0;
+void Delay150ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	//_nop_();
+	i = 2;
+	j = 13;
+	k = 237;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+
+void Delay300ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	//_nop_();
+	i = 3;
+	j = 26;
+	k = 223;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+
+void Delay2000ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+//	_nop_();
+	i = 15;
+	j = 2;
+	k = 235;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+
+void Delay10us()		//@11.0592MHz
+{
+	unsigned char i;
+
+	//_nop_();
+	i = 25;
+	while (--i);
+}
+void Timer0Init(void)		//500微秒@11.0592MHz
+{
+//	AUXR &= 0x7F;		//定时器时钟12T模式
+	TMOD &= 0xF0;		//设置定时器模式
+	TMOD |= 0x01;		//设置定时器模式
+	TL0 = 0x33;		//设置定时初值
+	TH0 = 0xFE;		//设置定时初值
+	TF0 = 0;		//清除TF0标志
+	TR0 = 1;		//定时器0开始计时
+	ET0=1;
+	EA=1;
+}
+
+
+void Time1Init()
+{
+	TMOD &= 0x0F;		//设置定时器模式
+	TMOD |= 0x10;		//设置定时器模式
+	TH1=0;
+	TL1=0;
+	//设置定时器0工作模式1，初始值设定0开始数数，不着急启动定时器
+}
+/*
+十进制2左移1位，变成20。相当于乘以10
+二禁止1左移1位，变成10（2）。相当于乘以2，左移8位，乘以2的8次方=256；*/
+void startHC()
+{
+	Trig=0;
+	Trig=1;
+	Delay10us();
+	Trig=0;
+}
+double get_distance()
+{
+	double time;
+		//定时器数据清零，以便下一次测距
+	TL1=0;
+	TH1=0; 
+	//1.Trig,给Trig端口至少10us的高电平    start HC
+	startHC();
+	//2.Echo由低电平跳转到高电平，表示开始发送波，
+	while(Echo==0);
+	//波发出去的那一下，开始启动定时器
+	TR1=1;
+	
+	//3.由高电平跳转回低电平，表示波回来了
+	while(Echo==1);
+	//波回来的那一下，我们开始停止定时器
+	TR1=0;
+	//4.计算出中间经过多少时间
+	time=(TH1*256+TL1)*1.085;//us为单位，，TH0左移8位腾给TL0
+	//5.距离=速度（340m/s）*时间/2
+	//dis=340m/s==34000cm/s==34cm/ms==0.034cm/us
+	//dis=time*0.034/2;
+	return (time*0.017);
+}
+void openStatusLight()
+{
+	D5=0;
+		D6=1;
+}
+void initsg90_0()
+{
+	jd=1;
+	cnt=0;
+	sg90_con=1;
+}
+
+void closeStatusLight()
+{
+	D5=1;
+		D6=0;
+}
+void EX0_Init()
+{
+		//打开外部中断
+	EX0=1;
+	//低电平触发
+	IT0=0;
+}
+void main()
+{
+	
+	double dis;//距离
+	Time1Init();
+	Timer0Init();
+	//舵机的初始位置
+	initsg90_0();
+EX0_Init();
+
+	while(1)
+	{
+	dis=get_distance();
+	if(dis<10||SW1==0||	vibrate_mark==1)
+	{
+		openStatusLight();
+		//舵机开盖
+			jd=3;
+		if(jd_back!=jd)
+		{
+			cnt=0;
+		Delay300ms()	;
+			vibrate_mark=0;
+		beep=0;
+		Delay150ms()	;
+		beep=1;
+		}
+			
+	
+		jd_back=jd;
+
+	//	cnt=0;
+		//Delay300ms()	;
+			//vibrate_mark=0;
+		//beep=0;
+		//Delay150ms()	;
+		//beep=1;
+	}
+	else
+	{
+		closeStatusLight();
+		//关盖
+		jd=1;
+		jd_back=jd;
+		cnt=0;
+		Delay300ms()	;
+	}
+
+}
+}
+
+void Time0Handler() interrupt 1
+{
+	cnt++;
+	TL0=0x33;
+	TH0=0xFE;
+	if(cnt<jd)//cnt=1时，爆表了一次   cnt=0;
+	{
+		sg90_con=1;
+	}
+	else
+	{
+		sg90_con=0;
+	}
+	if(cnt==40)
+	{
+		cnt=0;
+		sg90_con=1;
+	}
+}
+void EX0_Handler() interrupt 0
+{
+	vibrate_mark=1;
+}
