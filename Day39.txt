@@ -1,0 +1,52 @@
+#include"reg52.h"
+sbit led1=P3^7;
+sbit led2=P3^6;
+sbit Trig=P1^5;
+sbit Echo=P1^6;
+double dis,time;
+void Time0Init() 
+{
+	TMOD&=0xF0;
+	TMOD|=0x01;
+  TH0=0;
+	TL0=0;
+}
+
+void Delay10us()		//@11.0592MHz
+{
+	unsigned char i;
+
+	i = 2;
+	while (--i);
+}
+
+void main()
+{
+	Time0Init();
+	while(1)
+	{ 
+		Time0Init();
+		Trig=0;
+		Trig=1;
+		Delay10us();
+		Trig=0;
+		while(Echo==0);
+		TR0=1;
+		while(Echo==1);
+		TR0=0;
+		time=(TH0*256+TL0)*1.085;
+		dis=time*0.017;
+		if(dis<10)
+		{
+			led1=0;
+	    led2=1;
+		}
+		else
+		{
+			led1=1;
+	    led2=0;
+		}
+		
+	}
+	
+}
