@@ -1,0 +1,55 @@
+#include"reg52.h"
+#include"intrins.h"
+sfr AUXR=0x8e;
+void UartInit(void)		//9600bps@11.0592MHz
+{
+	SCON=0x40;
+	TMOD&=0xF0;
+	TMOD|=0x20;
+	TL1=0xFD;
+	TH1=0xFD;
+	TR1=1;
+}
+void sendByte(char data_msg)
+{
+	SBUF=data_msg;
+}
+void sendString(char*str)
+{
+	while(*str!='\0')
+	{
+		sendByte(*str);
+		str++;
+	}
+}
+void Delay1000ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	i = 8;
+	j = 1;
+	k = 243;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+
+void main()//写一个程序，每隔一秒向电脑发送一个字符a
+{
+	//char data_msg='a';//不用char data 是因为data在keil中是一个
+	                  //关键字，不要乱用它，用其他名称，如data_msg；
+	//配置C51串口的通信方式,配比特率
+	UartInit();
+	while(1)
+	{
+		Delay1000ms();
+		//SBUF=data_msg;//向发送缓冲区写入数据，就完成数据的发送
+		sendByte('a');
+	  //sendString("chenlichen shuai");
+	}
+}
