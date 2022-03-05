@@ -1,0 +1,84 @@
+#include"reg52.h"
+#include"intrins.h"
+sfr AUXR=0x8e;
+sbit D5=P3^7;
+int cmd;
+void UartInit(void)		//9600bps@11.0592MHz
+{
+	SCON=0x50;//01010000，，，REN=1允许串行口接受状态
+	TMOD&=0xF0;
+	TMOD|=0x20;
+	TL1=0xFD;
+	TH1=0xFD;
+	TR1=1;
+	EA=1;//开启总中断
+	ES=1;//开启串口中断
+}
+void sendByte(char data_msg)
+{
+	SBUF=data_msg;//sendByte只是把data_msg中的数据没有延时的往SBUF里扔；SBUF在发数据的时候有一个移位寄存器的操作过程，
+	//那移位寄存器的操作过程要耗时间，用软件延时定时器给它一点时间，让它把字符串都放进去
+	//while(TI==0);
+	//TI=0;
+	//另一个写法：
+	while(!TI);//while中为0是假，为非零是真
+	TI=0;
+}
+void sendString(char*str)
+{
+	while(*str!='\0')
+	{
+		sendByte(*str);
+		str++;
+	}
+}
+void Delay1000ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	i = 8;
+	j = 1;
+	k = 243;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+
+void main()//写一个程序，每隔一秒向电脑发送一个字符a
+{
+	int cmd;
+	D5=1;
+	//char data_msg='a';//不用char data 是因为data在keil中是一个
+	                  //关键字，不要乱用它，用其他名称，如data_msg；
+	//配置C51串口的通信方式,配比特率
+	UartInit();
+	while(1)
+	{
+		Delay1000ms();
+		//SBUF=data_msg;//向发送缓冲区写入数据，就完成数据的发送
+		//sendByte('a');
+	  sendString("chenlichen shuai\r\n");//心跳包
+		//怎么知道收到数据，不断查询RI的值，如果RI是1（收到数据后由硬件置1)
+	}
+}
+void Uart_Handler() interrupt 4
+{
+	if(RI)//中断处理函数中，对于接收中断的响应
+	{
+		RI=0;//清除接受中断标志位
+		cmd=SBUF;
+		if(cmd=='1')//避坑：如果cmd==1；对应ASCII码值是49，文本模式的1和自己想的不一样，文本模式的1是49，文本模式的0是字符，是48
+		{            //1改为‘1’就行了，0改为‘0’，或者用HEX模式发送0和1（文本和HEX的坑）
+			D5=0;//点亮D5
+		}
+		if(cmd=='0')//如果cmd==0；对应ASCII码值是48
+		{
+			D5=1;//熄灭D5
+		}
+	}
+}
