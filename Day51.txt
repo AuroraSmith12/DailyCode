@@ -1,0 +1,44 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include<stdio.h>
+#define R 1
+#define TOM
+#define DEBUG
+int main()
+{
+	/*int a;
+	scanf("%d", &a);
+	switch (a)
+	{
+	case 1:
+		printf("xq1");
+		break;
+	default:
+		printf("error");
+		break;
+
+*/
+	//}
+	/*float c, r, s;
+	printf("请输入c的值： ");
+		scanf("%f", &c);
+#if R
+	r = 3.14156*c*c;
+	printf("圆的面积为：%f\n", r);
+#else
+	s = c*c;
+	printf("c的平方是%f\n", s);
+#endif
+*/
+#ifdef TOM
+	printf("Hi TOM\n");
+#else
+	printf("Hi anyone\n");
+#endif
+//#ifndef DEBUG
+//	printf("this is DEBUG version\n");
+//#else
+//	printf("this is release version\n");
+//#endif
+	return 0;
+}
