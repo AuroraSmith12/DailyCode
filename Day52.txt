@@ -1,0 +1,55 @@
+#include"reg52.h"
+#include"intrins.h"
+sbit D5=P3^7;
+sbit D6=P3^6;
+sbit Echo=P1^2;
+sbit Trig=P1^1;
+double time,dis;
+void Delay10us()		//@11.0592MHz
+{
+	unsigned char i;
+
+	i = 2;
+	while (--i);
+}
+void StartHc()
+{
+	Trig=1;
+	Delay10us();
+	Trig=0;
+}
+void Timer0Init()
+{
+	TMOD&=0xF0;
+	TMOD|=0x01;
+	TH0=0;
+	TL0=0;
+}
+void main()
+{
+	while(1)
+	{
+	//D5=1;
+	//D6=1;
+	Timer0Init();
+	StartHc();
+	while(Echo==0);
+	TR0=1;
+	while(Echo==1);
+	TR0=0;
+	time=(TH0*256+TL0)*1.085;
+	dis=time*0.017;
+	if(dis<20)
+	{
+		D5=0;
+		D6=1;
+	}
+	else
+	{
+		D6=0;
+		D5=1;
+	}
+	TH0=0;
+	TL0=0;
+}
+}
