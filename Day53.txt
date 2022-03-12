@@ -1,0 +1,76 @@
+#include"reg52.h"
+#include"intrins.h"
+sbit D5=P3^7;
+sbit D6=P3^6;
+sbit sg90=P1^1;
+void Delay2000ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	i = 15;
+	j = 2;
+	k = 235;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+
+void Timer0Init()
+{
+	TMOD&=0xF0;
+	TMOD|=0x01;
+	TH0=0xFE;
+	TL0=0x33;
+	TF0=0;
+	TR0=1;
+	ET0=1;
+	EA=1;
+	
+}
+int jd,cnt;
+
+void main()
+{
+	D5=1;
+	D6=1;
+   Timer0Init();
+	jd=3;
+	while(1)
+	{
+		jd=3;
+		Delay2000ms();
+		D5=0;
+		D6=1;
+		jd=1;
+		Delay2000ms();
+		D5=1;
+		D6=0;
+	}
+	
+}
+void Timer0Handler() interrupt 1
+{
+	TH0=0xFE;
+  TL0=0x33;
+	cnt++;
+	if(cnt<jd)
+	{
+		sg90=1;
+	}
+	else
+	{
+		sg90=0;
+	}
+	if(cnt==40)
+	{
+		sg90=1;
+		cnt=0;
+		TH0=0xFE;
+    TL0=0x33;
+	}
+}
