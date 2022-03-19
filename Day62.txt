@@ -1,0 +1,119 @@
+#include "reg52.h"
+#include "intrins.h"
+/*
+RS  -- P1.0
+RW  -- P1.1 
+E   -- P1.4 */
+#define databuffer  P0 //定义8位数据线，Po端口组
+sbit RS = P1^0;
+sbit RW = P1^1;
+sbit EN = P1^4;
+
+void check_busy()
+{
+	char tmp = 0x80;
+	databuffer = 0x80;
+	
+	while(tmp & 0x80){//1000 0000
+		RS = 0;
+		RW = 1;
+		EN = 0;
+		_nop_();
+		EN = 1;
+		_nop_();
+		_nop_();
+		tmp = databuffer;
+		EN = 0;
+		_nop_();
+	}
+}
+
+void Write_Cmd_Func(char cmd)
+{
+	check_busy();
+	RS = 0;
+	RW = 0;
+	
+	EN = 0;
+	_nop_();
+	databuffer = cmd;
+	_nop_();
+	EN = 1;
+	_nop_();
+	_nop_();
+	EN = 0;
+	_nop_();	
+}
+
+void Write_Data_Func(char dataShow)
+{
+	check_busy();
+	RS = 1;
+	RW = 0;
+	
+	EN = 0;
+	_nop_();
+	databuffer = dataShow;
+	_nop_();
+	EN = 1;
+	_nop_();
+	_nop_();
+	EN = 0;
+	_nop_();	
+}
+
+void Delay15ms()		//@11.0592MHz
+{
+	unsigned char i, j;
+
+	i = 27;
+	j = 226;
+	do
+	{
+		while (--j);
+	} while (--i);
+}
+void Delay5ms()		//@11.0592MHz
+{
+	unsigned char i, j;
+
+	i = 9;
+	j = 244;
+	do
+	{
+		while (--j);
+	} while (--i);
+}
+
+
+void LCD1602_INIT()
+{
+	//（1）延时 15ms
+	Delay15ms();
+//（2）写指令 38H(不检测忙信号) 
+	Write_Cmd_Func(0x38);
+//（3）延时 5ms
+	Delay5ms();
+//（4）以后每次写指令，读/写数据操作均需要检测忙信号
+//（5）写指令 38H：显示模式设置
+	Write_Cmd_Func(0x38);
+//（6）写指令 08H：显示关闭
+	Write_Cmd_Func(0x08);
+//（7）写指令 01H：显示清屏
+	Write_Cmd_Func(0x01);
+//（8）写指令 06H：显示光标移动设置
+	Write_Cmd_Func(0x06);
+//（9）写指令 0CH：显示开及光标设置}
+	Write_Cmd_Func(0x0c);
+}
+
+void main()
+{
+	char position = 0x80 + 0x05;
+	char dataShow = 'C';
+	LCD1602_INIT();
+	Write_Cmd_Func(position);//选择要显示的地址
+	Write_Data_Func(dataShow);//发送要显示的字符
+
+}
+
