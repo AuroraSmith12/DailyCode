@@ -1,0 +1,63 @@
+#include "reg52.h"
+#include "intrins.h"
+
+sbit scl = P0^1;
+sbit sda = P0^3;
+
+void IIC_Start()
+{
+	sda = 1;
+	scl = 1;
+	_nop_();
+	sda = 0;
+	_nop_();
+}
+
+void IIC_Stop()
+{
+	sda = 0;
+	scl = 1;
+	_nop_();
+	sda = 1;
+	_nop_();
+}
+
+char IIC_ACK()
+{
+	char flag;
+	sda = 1;//就在时钟脉冲9期间释放数据线
+	_nop_();
+	scl = 1;
+	_nop_();
+	flag = sda;
+	_nop_();
+	scl = 0;
+	_nop_();
+	
+	return flag;
+}
+
+void IIC_Send_Byte(char dataSend)
+{
+	int i;
+	
+	for(i = 0;i<8;i++){
+		scl = 0;//scl拉低，让sda做好数据准备
+		sda = dataSend & 0x80;//1000 0000获得dataSend的最高位，给sda
+		_nop_();//发送数据建立时间
+		scl = 1;//scl拉高开始发送
+		_nop_();//数据发送时间
+		scl = 0;//发送完毕拉低
+		_nop_();//
+		dataSend = dataSend << 1;
+	}
+}
+
+
+void main()
+{
+		int a = 10;
+	
+		IIC_Start();
+
+}
