@@ -1,0 +1,113 @@
+#include "reg52.h"
+#include "intrins.h"
+#define databuffer P0//定义8位数据线，P0端口组
+/*
+RS--P1.0
+RW--P1.1
+E--P1.4
+*/
+
+sbit RS=P1^0;
+sbit RW=P1^1;
+sbit EN=P1^4;
+void Delay15ms()		//@11.0592MHz
+{
+	unsigned char i, j;
+
+	i = 27;
+	j = 226;
+	do
+	{
+		while (--j);
+	} while (--i);
+}
+
+void Delay5ms()		//@11.0592MHz
+{
+	unsigned char i, j;
+
+	i = 9;
+	j = 244;
+	do
+	{
+		while (--j);
+	} while (--i);
+}
+
+void check_busy()
+{
+	char tmp=0x80;
+	databuffer=0x80;
+	
+	while(tmp&0x80)
+	{
+		RS=0;
+		RW=1;
+		EN=0;
+		_nop_();
+		EN=1;
+		_nop_();
+		_nop_();
+		tmp=databuffer;
+		EN=0;
+		_nop_();
+		
+	}
+	
+	
+	
+}
+void Write_Cmd_Fuc(char cmd)
+{
+	check_busy();
+	RS=0;
+	RW=0;
+	
+	EN=0;
+	_nop_();
+	databuffer=cmd;
+	EN=1;
+	_nop_();
+	_nop_();
+	EN=0;
+	_nop_();
+	
+}
+void Write_Data_Fuc(char dataShow)
+{
+	check_busy();
+	RS=1;
+	RW=0;
+		
+	EN=0;
+	_nop_();
+	databuffer=dataShow;
+	EN=1;
+	_nop_();
+	_nop_();
+	EN=0;
+	_nop_();
+	
+}
+void LCD1602_INIT()
+{
+	Delay15ms();
+	Write_Cmd_Fuc(0x38);
+		Delay5ms();
+	Write_Cmd_Fuc(0x38);
+	Write_Cmd_Fuc(0x08);
+	Write_Cmd_Fuc(0x01);
+	Write_Cmd_Fuc(0x06);
+	Write_Cmd_Fuc(0x0c);
+}
+void main()
+{
+	
+	char position=0x80 + 0x05;//05的位置
+	char dataShow='c';
+	LCD1602_INIT();
+	Write_Cmd_Fuc(position);//选择要显示的地址	 
+	Write_Data_Fuc(dataShow);//发送要显示的字符
+	
+	
+}
