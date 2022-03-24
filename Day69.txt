@@ -1,0 +1,33 @@
+#include "reg52.h"
+#include "intrins.h"
+sbit D5=P3^7;
+	char arr[10]={0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F};
+int i=0;
+void Delay500ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	i = 4;
+	j = 129;
+	k = 119;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+
+void main()
+{
+	D5=0;
+
+	while(1)
+	{
+		P0=arr[i];
+		Delay500ms();
+		
+	}
+}
