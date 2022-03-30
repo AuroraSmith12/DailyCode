@@ -1,0 +1,27 @@
+#include "stm32f10x.h"      // Device header
+#include "led.h"
+#include "relay.h"
+void delay(uint16_t time)//让CPU数数
+{
+	uint16_t i=0;
+	while(time--)
+	{
+		
+		i=12000;
+		while(i--);
+	}
+	
+	
+}
+
+int main(void)
+{
+	LED_Init();
+	Relay_Init();
+	while(1)
+	{
+	GPIO_ResetBits(GPIOA, GPIO_Pin_3);//输出低电平
+ 
+	}
+
+}
