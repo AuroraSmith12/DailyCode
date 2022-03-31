@@ -1,0 +1,59 @@
+#include "led.h"
+#include "stm32f10x.h"
+
+void LED_Init(void)
+{
+		GPIO_InitTypeDef led_init;
+	//1.使能APB2的时钟GPIC
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+
+	//2.结构体配置
+
+	led_init.GPIO_Mode=GPIO_Mode_Out_PP;
+	led_init.GPIO_Pin=GPIO_Pin_0|GPIO_Pin_1  |GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_4;
+	led_init.GPIO_Speed=GPIO_Speed_10MHz;
+	GPIO_Init(GPIOA,&led_init );
+
+	
+}
+
+#include "stm32f10x.h"      // Device header
+#include "led.h"
+int i=0;
+int j=0;
+void delay(uint16_t time)//让CPU数数
+{
+	uint16_t i=0;
+	while(time--)
+	{
+		
+		i=12000;
+		while(i--);
+	}
+	
+	
+}
+
+int main(void)
+{
+	LED_Init();
+	while(1)
+	{
+	//GPIO_ResetBits(GPIOA, GPIO_Pin_0|GPIO_Pin_1  |GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_4);//输出低电平
+  //GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+
+		//delay(1000);
+		//GPIO_SetBits(GPIOA, GPIO_Pin_0|GPIO_Pin_1  |GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_4);//输出高电平+
+		//GPIO_Write(GPIOA, ~0x0001);
+		//delay(1000);
+		i=~0x0001;
+		for(j=0;j<=4;j++)
+		{
+			GPIO_Write(GPIOA,i<<1);
+		delay(1000);
+
+		}
+		
+	}
+
+}
