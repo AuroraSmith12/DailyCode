@@ -1,0 +1,96 @@
+#include "stm32f10x.h"      // Device header
+#include "led.h"
+#include "relay.h"
+#include "exti.h"
+void delay(uint16_t time)//让CPU数数
+{
+	uint16_t i=0;
+	while(time--)
+	{
+		
+		i=12000;
+		while(i--);
+	}
+	
+	
+}
+
+int main(void)
+{
+	LED_Init();
+	Relay_Init();
+	exti_init();
+	while(1)
+	{
+	//GPIO_ResetBits(GPIOA, GPIO_Pin_3);//输出低电平
+ 
+	}
+
+}
+
+void EXTI1_IRQHandler()//中断函数
+{
+	if(EXTI_GetITStatus( EXTI_Line1)!=RESET)  //判断是否发生了中断
+	{
+		GPIO_ResetBits(GPIOA, GPIO_Pin_3); //打开继电器，开灯
+		delay(1000);
+		GPIO_SetBits(GPIOA, GPIO_Pin_3);
+	}
+		EXTI_ClearFlag( EXTI_Line1);
+
+		
+	}
+
+	
+	
+
+#include "exti.h"
+#include "stm32f10x.h"
+
+
+void exti_init(void)
+{
+	
+	//1.配置GPIO--震动传感器
+	GPIO_InitTypeDef shake_init;
+	EXTI_InitTypeDef exti_init;
+	NVIC_InitTypeDef nvic_init;
+	
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2 );
+
+	
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+
+	GPIO_EXTILineConfig( GPIO_PortSourceGPIOA,  GPIO_PinSource1);
+
+	
+	
+	shake_init.GPIO_Mode=GPIO_Mode_IPD;
+	shake_init.GPIO_Pin=GPIO_Pin_1;
+	shake_init.GPIO_Speed=GPIO_Speed_10MHz;
+	
+  GPIO_Init(GPIOA,&shake_init);
+
+	//2.配置EXTI外部中断
+	exti_init.EXTI_Line=EXTI_Line1;
+	exti_init.EXTI_LineCmd=ENABLE;
+	exti_init.EXTI_Mode=EXTI_Mode_Interrupt;
+	exti_init.EXTI_Trigger=EXTI_Trigger_Falling;
+	EXTI_Init(&exti_init);
+
+//3.配置NVIC中断控制器
+  nvic_init.NVIC_IRQChannel=EXTI1_IRQn;
+  nvic_init.NVIC_IRQChannelCmd=ENABLE;
+  nvic_init.NVIC_IRQChannelPreemptionPriority=1;
+  nvic_init.NVIC_IRQChannelSubPriority=1;
+	
+	NVIC_Init(&nvic_init);
+
+
+	
+	
+}
+
+#include "stm32f10x.h"
+void exti_init(void);
