@@ -1,0 +1,134 @@
+#include "stm32f10x.h"      // Device header
+#include "led.h"
+#include "shake.h"
+void delay(uint16_t time)//让CPU数数
+{
+	uint16_t i=0;
+	while(time--)
+	{
+		
+		i=12000;
+		while(i--);
+	}
+	
+	
+}
+
+int main(void)
+{
+	LED_Init();
+	Shake_Init();
+	
+	
+	GPIO_SetBits(GPIOC,GPIO_Pin_13);
+	while(1)
+	{
+	// GPIO_ResetBits(GPIOC,GPIO_Pin_13);//点灯
+
+	}
+
+}
+
+
+void EXTI9_5_IRQHandler()
+{
+	if( EXTI_GetITStatus( EXTI_Line5)!=RESET)//判断是否发生了中断
+	{
+		GPIO_ResetBits(GPIOC,GPIO_Pin_13);//开灯
+		delay(1000);
+			GPIO_SetBits(GPIOC,GPIO_Pin_13);
+
+		
+		
+	}
+ EXTI_ClearFlag( EXTI_Line5);
+
+
+	
+	
+}
+#include "stm32f10x.h"
+
+void LED_Init(void);
+
+#include "led.h"
+#include "stm32f10x.h"
+
+void LED_Init(void)
+{
+	
+	GPIO_InitTypeDef led_init;
+	
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
+  led_init.GPIO_Mode=GPIO_Mode_Out_PP;
+	led_init.GPIO_Pin=GPIO_Pin_13;
+	led_init.GPIO_Speed=GPIO_Speed_10MHz;
+	
+	
+  GPIO_Init(GPIOC, &led_init);
+
+
+	
+	
+	
+
+	
+	
+	
+	
+	
+}
+
+#include "stm32f10x.h"
+
+
+void Shake_Init(void);
+
+
+#include "stm32f10x.h"
+#include "shake.h"
+
+
+void Shake_Init()
+{
+	
+	GPIO_InitTypeDef shake_init;
+		EXTI_InitTypeDef exti_init;
+	
+	NVIC_InitTypeDef nvic_init;
+	 RCC_APB2PeriphClockCmd( RCC_APB2Periph_AFIO,ENABLE  );//外部中断的复用时钟
+	
+	 NVIC_PriorityGroupConfig( NVIC_PriorityGroup_2);
+
+	
+	 RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOB,  ENABLE);
+shake_init.GPIO_Mode=GPIO_Mode_IPD;
+	shake_init.GPIO_Pin=GPIO_Pin_5;
+	shake_init.GPIO_Speed=GPIO_Speed_10MHz;
+	 GPIO_Init(GPIOB, &shake_init );
+	
+	
+	exti_init.EXTI_Line=EXTI_Line5;
+	exti_init.EXTI_LineCmd=ENABLE;
+	exti_init.EXTI_Mode=EXTI_Mode_Interrupt;
+	exti_init.EXTI_Trigger=EXTI_Trigger_Falling;
+	 EXTI_Init(&exti_init);
+
+	nvic_init.NVIC_IRQChannel=EXTI9_5_IRQn;
+	nvic_init.NVIC_IRQChannelCmd=ENABLE;
+	nvic_init.NVIC_IRQChannelPreemptionPriority=1;
+	nvic_init.NVIC_IRQChannelSubPriority=1;
+	 
+	 NVIC_Init(&nvic_init);
+
+	
+	 GPIO_EXTILineConfig( GPIO_PortSourceGPIOB,  GPIO_PinSource5); //在gpio.h中，外部中断原配置
+
+	
+}
+
+
+
+
+
