@@ -1,0 +1,219 @@
+#include "stm32f10x.h"      // Device header
+#include "led.h"
+#include "relay.h"
+#include "exti.h"
+#include "shake.h"
+#include "usart.h"
+
+
+void delay(uint16_t time)//让CPU数数
+{
+	uint16_t i=0;
+	while(time--)
+	{
+		
+		i=12000;
+		while(i--);
+	}
+	
+	
+}
+
+int main(void)
+{
+	LED_Init();
+	Relay_Init();
+	exti_init();
+  Shake_Init();
+  usart_init();
+//	 USARTSendByte(  USART1,  'O');
+	//	 USARTSendByte(  USART1,  'K');
+
+
+
+	
+	GPIO_SetBits(GPIOA, GPIO_Pin_3);
+	
+	while(1)
+	{
+	//GPIO_ResetBits(GPIOA, GPIO_Pin_3);//输出低电平
+ 
+	//	if( GPIO_ReadOutputDataBit(GPIOA,  GPIO_Pin_1)==0)
+		//{
+		 //GPIO_ResetBits(GPIOA,  GPIO_Pin_13);
+			//delay(1000);
+		 //GPIO_SetBits( GPIOA,  GPIO_Pin_13);
+
+
+			
+		//}
+		//else
+		//{
+			// GPIO_SetBits( GPIOA,  GPIO_Pin_13);
+			
+			
+		//}
+
+// USART_SendData( USART1,  'O');
+
+		
+	//	while( USART_GetFlagStatus(USART1,  USART_FLAG_TXE)==RESET);
+		
+		// USART_SendData( USART1,  'K');
+		//while( USART_GetFlagStatus(USART1,  USART_FLAG_TXE)==RESET);
+  //USART_SendData( USART1,  '\r');
+  //USART_SendData( USART1,  '\n');
+		//while( USART_GetFlagStatus(USART1,  USART_FLAG_TXE)==RESET);
+  //delay(1000);
+// USARTSendstr(  USART1,  "zlw handsome\r\n");
+	//	delay(1000);
+	
+	
+	//printf("zlw handsome\r\n");
+	putchar('O');
+	delay(1000);
+	
+	}
+}
+
+//void EXTI1_IRQHandler(void) //中断函数
+//{
+	
+	//if( EXTI_GetITStatus( EXTI_Line1)!=RESET)//判断是否发生了中断
+	//{
+		//	GPIO_ResetBits(GPIOA, GPIO_Pin_3);//打开继电器，开灯
+      //delay(1000);    
+		  //GPIO_SetBits(GPIOA, GPIO_Pin_3);
+
+		
+	//}
+
+	// EXTI_ClearFlag( EXTI_Line1);
+
+	
+//}
+	
+#include "stm32f10x.h"
+#include <stdio.h>
+void usart_init(void);
+void USARTSendByte( USART_TypeDef* USARTx, uint16_t Data);
+void USARTSendstr( USART_TypeDef* USARTx,  char*str);
+
+
+#include "stm32f10x.h"
+#include "usart.h"
+
+void usart_init(void)
+{
+	 GPIO_InitTypeDef gpio_initStructure;
+	
+	USART_InitTypeDef usart_initStructure;
+	
+	 RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOA,  ENABLE);//GPIOA时钟
+   RCC_APB2PeriphClockCmd( RCC_APB2Periph_AFIO,  ENABLE);//引脚复用的时钟
+	 RCC_APB2PeriphClockCmd( RCC_APB2Periph_USART1,  ENABLE);//串口时钟
+
+ 
+	//配置PA9   TX
+	gpio_initStructure.GPIO_Mode=GPIO_Mode_AF_PP;
+	gpio_initStructure.GPIO_Pin=GPIO_Pin_9;
+	gpio_initStructure.GPIO_Speed=GPIO_Speed_50MHz;
+	
+	 GPIO_Init(GPIOA,&gpio_initStructure );
+
+
+	//配置PA10  RX
+	gpio_initStructure.GPIO_Mode=GPIO_Mode_IN_FLOATING;
+	gpio_initStructure.GPIO_Pin=GPIO_Pin_10;
+	
+		 GPIO_Init(GPIOA,&gpio_initStructure );
+
+
+	usart_initStructure.USART_BaudRate=115200;
+	usart_initStructure.USART_HardwareFlowControl=USART_HardwareFlowControl_None;
+	usart_initStructure.USART_Mode=USART_Mode_Rx|USART_Mode_Tx;
+	usart_initStructure.USART_Parity=USART_Parity_No;
+	usart_initStructure.USART_StopBits=USART_StopBits_1;
+	usart_initStructure.USART_WordLength=USART_WordLength_8b;
+	
+	
+	 USART_Init( USART1,&usart_initStructure );
+	 
+	 
+	  USART_Cmd( USART1, ENABLE );
+
+
+	
+	
+}
+//发送字符
+void USARTSendByte( USART_TypeDef* USARTx, uint16_t Data)
+{
+	
+	 USART_SendData(USARTx,  Data);
+
+	while( USART_GetFlagStatus(USARTx,  USART_FLAG_TXE)==RESET);
+
+	
+	
+	
+}
+
+
+
+//发送字符串
+
+void USARTSendstr( USART_TypeDef* USARTx,  char*str)
+{
+	
+	uint16_t i=0;//等价于unsigned int
+	do
+	{
+		 USARTSendByte( USARTx,  *(str+i));
+		i++;
+
+		
+		
+		
+		
+		
+	}while(*(str+i)!='\0');
+	
+	
+		while( USART_GetFlagStatus(USARTx,  USART_FLAG_TC)==RESET);
+
+}
+
+
+int fputc(int ch,FILE*f)
+{
+	
+		 USART_SendData(USART1,  (uint8_t)ch);
+
+		while( USART_GetFlagStatus(USART1,  USART_FLAG_TXE)==RESET);
+
+	return (ch);
+	
+}
+
+
+
+int fgetc(FILE*f)
+{
+	
+	
+			while( USART_GetFlagStatus(USART1,  USART_FLAG_RXNE)==RESET);
+
+	
+	return (int) USART_ReceiveData( USART1);
+
+	
+	
+	
+	
+	
+}
+
+
+	
+
