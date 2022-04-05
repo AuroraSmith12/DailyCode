@@ -1,0 +1,123 @@
+#include "stm32f10x.h"      // Device header
+#include "led.h"
+#include "relay.h"
+#include "exti.h"
+#include "shake.h"
+#include "usart.h"
+#include "tim.h"
+
+void delay(uint16_t time)//让CPU数数
+{
+	uint16_t i=0;
+	while(time--)
+	{
+		
+		i=12000;
+		while(i--);
+	}
+	
+	
+}
+
+int main(void)
+{
+	LED_Init();
+	Relay_Init();
+	exti_init();
+  Shake_Init();
+  usart_init();
+//	 USARTSendByte(  USART1,  'O');
+	//	 USARTSendByte(  USART1,  'K');
+ tim_config();
+
+				  GPIO_SetBits( GPIOC, GPIO_Pin_13);
+
+
+	
+	GPIO_SetBits(GPIOA, GPIO_Pin_3);
+	
+	while(1)
+	{
+
+	}
+}
+
+
+	
+	void TIM2_IRQHandler(void)
+	{
+		static uint16_t tmp=0;
+	if( TIM_GetFlagStatus( TIM2,  TIM_IT_Update)!=RESET)
+	{
+		if(tmp++ %2==1)
+		{
+			 GPIO_ResetBits(GPIOC,  GPIO_Pin_13);
+
+			
+			
+			
+		}
+		else
+		{
+	   	 GPIO_SetBits(GPIOC,  GPIO_Pin_13);
+				
+				
+				
+		}
+		
+		
+		
+	}
+	 TIM_ClearFlag( TIM2, TIM_IT_Update );
+
+		
+	}
+	
+	#include "stm32f10x.h"
+
+void tim_config(void);
+
+	#include "stm32f10x.h"
+#include "tim.h"
+
+
+void tim_config(void)
+{
+	TIM_TimeBaseInitTypeDef TIMinitStructure;
+	NVIC_InitTypeDef NVICinitStructure;
+	
+  NVIC_PriorityGroupConfig( NVIC_PriorityGroup_1);
+ RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM2,  ENABLE);
+
+	
+	
+	TIMinitStructure.TIM_ClockDivision=TIM_CKD_DIV1;
+	TIMinitStructure.TIM_CounterMode=TIM_CounterMode_Up;
+	TIMinitStructure.TIM_Period=10000-1;
+	TIMinitStructure.TIM_Prescaler=7200-1;
+	
+	 TIM_TimeBaseInit( TIM2,  &TIMinitStructure);
+	
+	 TIM_Cmd( TIM2,  ENABLE);
+	
+	 TIM_ITConfig( TIM2,  TIM_IT_Update,  ENABLE);
+
+	
+	
+  NVICinitStructure.NVIC_IRQChannel=TIM2_IRQn;
+	NVICinitStructure.NVIC_IRQChannelCmd=ENABLE;
+	NVICinitStructure.NVIC_IRQChannelPreemptionPriority=1;
+	NVICinitStructure.NVIC_IRQChannelSubPriority=1;
+
+	
+	 NVIC_Init( &NVICinitStructure);
+
+	
+	
+	
+	
+}
+
+
+	
+
