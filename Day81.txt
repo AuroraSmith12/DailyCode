@@ -1,0 +1,113 @@
+#include "stm32f10x.h"      // Device header
+#include "led.h"
+#include "relay.h"
+#include "exti.h"
+#include "shake.h"
+#include "usart.h"
+#include "tim.h"
+#include "motor.h"
+
+
+
+void delay(uint16_t time)//让CPU数数
+{
+	uint16_t i=0;
+	while(time--)
+	{
+		
+		i=12000;
+		while(i--);
+	}
+	
+	
+}
+
+int main(void)
+{
+	
+	
+ motor_config();
+ uint16_t pwmval=155;
+	
+	while(1)
+	{
+		for(pwmval=195;pwmval>=175;pwmval-=5)
+		{
+
+		 TIM_SetCompare2( TIM3,  pwmval);
+		delay(500);
+
+		}
+	}
+}
+
+#include "stm32f10x.h"
+
+void motor_config(void);
+
+
+#include "stm32f10x.h"
+#include "motor.h"
+
+void motor_config(void)
+{
+	GPIO_InitTypeDef GPIO_Motorinit;
+	TIM_TimeBaseInitTypeDef TIM_Motorinit;
+	TIM_OCInitTypeDef TIMPWM_Motorinit;
+	
+  RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOB,  ENABLE);
+  RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM3,  ENABLE);
+  RCC_APB2PeriphClockCmd( RCC_APB2Periph_AFIO,  ENABLE);  //重映射时钟（部分重映射，完全重映射）
+
+  GPIO_PinRemapConfig( GPIO_PartialRemap_TIM3,  ENABLE); //部分重映射
+
+	
+	
+	
+	GPIO_Motorinit.GPIO_Mode=GPIO_Mode_AF_PP;
+	GPIO_Motorinit.GPIO_Pin=GPIO_Pin_5;
+	GPIO_Motorinit.GPIO_Speed=GPIO_Speed_50MHz;
+	
+  GPIO_Init(GPIOB,&GPIO_Motorinit );
+	
+	TIM_Motorinit.TIM_ClockDivision=TIM_CKD_DIV1;   //设置时钟分割
+	TIM_Motorinit.TIM_CounterMode=TIM_CounterMode_Up;  //TIM向上计数模式
+	TIM_Motorinit.TIM_Period=200-1;                   //设置在下一个更新事件装入活动的自动重装载值
+	TIM_Motorinit.TIM_Prescaler=7200-1;              //TIMx时钟频率预分频值
+	
+  TIM_TimeBaseInit( TIM3,  &TIM_Motorinit);
+
+
+	TIMPWM_Motorinit.TIM_OCMode=TIM_OCMode_PWM1; //选择定时器模式1
+	TIMPWM_Motorinit.TIM_OutputState=TIM_OutputState_Enable;  //比较输出使能
+	TIMPWM_Motorinit.TIM_OCPolarity=TIM_OCPolarity_Low;   //选择有效输出极性
+	
+	 TIM_OC2Init( TIM3, & TIMPWM_Motorinit);
+   TIM_OC2PreloadConfig( TIM3, TIM_OCPreload_Enable );
+	 TIM_Cmd( TIM3,  ENABLE);
+
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
+
+
+
+
+
+
+	
+	
+
