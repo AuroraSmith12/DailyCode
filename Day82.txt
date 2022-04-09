@@ -1,0 +1,90 @@
+#include "stm32f10x.h"      // Device header
+#include "led.h"
+#include "relay.h"
+#include "exti.h"
+#include "shake.h"
+#include "usart.h"
+#include "tim.h"
+#include "motor.h"
+#include "SysTick.h"
+
+
+void delay(uint16_t time)//让CPU数数
+{
+	uint16_t i=0;
+	while(time--)
+	{
+		
+		i=12000;
+		while(i--);
+	}
+	
+	
+}
+
+int main(void)
+{
+	
+	
+ LED_Init();
+ GPIO_SetBits( GPIOC,  GPIO_Pin_13);
+
+	
+	while(1)
+	{
+		 GPIO_ResetBits( GPIOC,  GPIO_Pin_13);
+     ms_delay(1000);
+		 GPIO_SetBits( GPIOC,  GPIO_Pin_13);
+     ms_delay(1000);
+
+		
+	}
+}
+
+
+#include "stm32f10x.h"
+
+void ms_delay(uint32_t ms);
+void us_delay(uint32_t us);
+
+
+#include "stm32f10x.h"
+#include "SysTick.h"
+
+void ms_delay(uint32_t ms)
+{
+	uint32_t i;
+	
+	 SysTick_Config( 72000);
+	for(i=0;i<ms;i++)
+	{
+		while (  !((SysTick->CTRL)  &  (1<<16) ));
+		
+	}
+	
+	SysTick->CTRL &=~ SysTick_CTRL_ENABLE_Msk;
+	
+}
+
+
+void us_delay(uint32_t us)
+{
+	uint32_t i;
+	
+	 SysTick_Config( 72);
+	for(i=0;i<us;i++)
+	{
+		while (  !((SysTick->CTRL)  &  (1<<16) ));
+		
+	}
+	
+	SysTick->CTRL &=~ SysTick_CTRL_ENABLE_Msk;
+	
+}
+
+
+
+
+	
+	
+
