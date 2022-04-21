@@ -1,0 +1,199 @@
+#include "reg52.h"
+#include "intrins.h"
+#include <string.h>
+
+sbit ledOne = P3^6;
+sbit D5=P3^7;
+sfr AUXR=0x8e;
+sfr WDT_CONTR=0xE1;
+sbit touch=P3^0;
+sbit buzzer=P0^2;
+
+sbit sg90_con = P1^1;
+int jd;
+int cnt = 0;
+
+volatile unsigned char FPM10A_RECEICE_BUFFER[51];
+                                                                         //0xF1,0x1F,0xE2,0x2E,0xB6,0x6B,0xA8,0x8A,0x00,0x11,0x7C,0x00,0x00,0x00,0x00,0x01,0x23,0x00,0x00,0x00,0x00,0x00,0x01,0x27,0x0F,0x00,0x00,0xA5
+                                                                      //收到的数据F1 1F E2 2E B6 6B A8 8A 00 11 7C 00 00 00 00 01 23 00 00 00 00 00 01 27 0F 00 00 A5            A5 00 00 0F 27 01 00 00 00 00 00 23 01 00 00 00 00 7C 11 00 8A  A8 6B B6 2E E2 1F F1 
+unsigned char ZWBD[]={0xEF,0x01,0xFF,0xFF,0xFF,0xFF,0x01,0x00,0x08,0x32,0x03,0xFF,0xFF,0x00,0x00,0x02,0x3C};//0xF1,0x1F,0xE2,0x2E,0xB6,0x6B,0xA8,0x8A,0x00,0x07,0x86,0x00,0x00,0x00,0x00,0x01,0x23,0xDC
+                                                                                      //0xF1,0x1F,0xE2,0x2E,0xB6,0x6B,0xA8,0x8A,0x00,0x07,0x86,0x00,0x00,0x00,0x00,0x01,0x21,0xDE
+
+void Delay200ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	i = 2;
+	j = 103;
+	k = 147;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+void Delay10ms()		//@11.0592MHz
+{
+	unsigned char i, j;
+
+	i = 18;
+	j = 235;
+	do
+	{
+		while (--j);
+	} while (--i);
+}
+
+void Delay1000ms()		//@11.0592MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	i = 8;
+	j = 1;
+	k = 243;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+
+void Time0Init()
+{
+	//1. 配置定时器0工作模式位16位计时
+	TMOD |= 0x01;
+	//2. 给初值，定一个0.5出来
+	TL0=0x33;
+	TH0=0xFE;
+	//3. 计时开启
+	TR0 = 1;
+	TF0 = 0;
+	//4. 打开定时器0中断
+	ET0 = 1;
+	//5. 打开总中断EA
+	EA = 1;
+}
+
+void UartInit(void)		//9600bps@11.0592MHz
+{
+	PCON &= 0x7F;		//波特率不倍速
+	SCON = 0x50;		//8位数据,可变波特率
+	AUXR &= 0xBF;		//定时器1时钟为Fosc/12,即12T
+	AUXR &= 0xFE;		//串口1选择定时器1为波特率发生器
+	TMOD &= 0x0F;		//清除定时器1模式位
+	TMOD |= 0x20;		//设定定时器1为8位自动重装方式
+	TL1 = 0xFD;		//设定定时初值
+	TH1 = 0xFD;		//设定定时器重装值
+	ET1 = 0;		//禁止定时器1中断
+	TR1 = 1;		//启动定时器1
+
+//	EA = 1;//开启总中断
+//	ES = 1;//开启串口中断
+}
+
+
+void Uart_Send_Byte(unsigned char*p)
+{
+	int j=0;
+	for(j=0;j<17;j++)
+	{
+		SBUF=*p;
+		p++;
+		while(!TI);
+		TI=0;
+		
+		
+	}
+}
+unsigned char Uart_Receive_Byte()
+{
+	unsigned char dat;
+	while(!RI);
+	RI=0;
+	dat=SBUF;
+
+	return (dat);
+}
+void FPM10A_Receive_Data(unsigned char ucLength)
+{
+  unsigned char i;
+
+  for (i=0;i<ucLength;i++)
+     FPM10A_RECEICE_BUFFER[i] = Uart_Receive_Byte();
+
+}
+
+
+void main()
+{
+	Delay200ms();
+	UartInit();
+	Time0Init();
+
+	WDT_CONTR=0x26;//使能看门狗
+	ledOne = 1;
+	jd = 1;      //初始角度是0度，0.5ms,溢出1就是0.5，高电平
+	cnt = 0;
+	sg90_con = 1;//一开始从高电平开始
+	while(touch)
+	{
+//TR0=0;
+		Delay10ms();
+	Uart_Send_Byte(ZWBD);
+	FPM10A_Receive_Data(51);
+	//	Delay1000ms();
+		WDT_CONTR|=0X10;//喂狗
+		Delay200ms();
+		//CLR_WDT=1;//喂狗
+		//WDT_CONTR|=0X10;//喂狗
+		if(FPM10A_RECEICE_BUFFER[43]==0x00)
+		{
+			buzzer=0;
+			Delay200ms();
+			Delay200ms();
+			buzzer=1;
+			WDT_CONTR|=0X10;//喂狗
+			
+			TR0=1;
+			ledOne=0;
+			jd=5;
+			cnt=0;
+			Delay1000ms();
+			Delay1000ms();
+			ledOne=1;
+			jd=1;
+			cnt=0;
+			Delay1000ms();
+			//TR0=0;
+		}
+		//TR0=0;
+	}
+
+		
+		}
+void Time0Handler() interrupt 1
+{
+	cnt++;  //统计爆表的次数. cnt=1的时候，报表了1
+	//重新给初值
+	TL0=0x33;
+	TH0=0xFE;
+	
+	//控制PWM波
+	if(cnt < jd){
+		sg90_con = 1;
+	}else{
+		sg90_con = 0;
+	}
+	
+	if(cnt == 40){//爆表40次，经过了20ms
+		cnt = 0;  //当100次表示1s，重新让cnt从0开始，计算下一次的1s
+		sg90_con = 1;
+	}
+		
+}
