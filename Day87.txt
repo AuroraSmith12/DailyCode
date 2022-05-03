@@ -1,0 +1,53 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include<stdio.h>
+int Add(int a, int b)
+{
+	return a + b;
+}
+int Sub(int a, int b)
+{
+	return a - b;
+}
+int Mul(int a, int b)
+{
+	return a*b;
+}
+int Div(int a, int b)
+{
+	return a / b;
+}
+int main()
+{
+	int i, j,k;
+
+	//9*9乘法口诀表
+	/*int i, j;
+	for (i = 1; i <= 9; i++)
+	{
+	for (j = 1; j <= i; j++)
+	{
+	printf("%d*%d=%d ", i, j, i*j);
+
+	}
+	printf("\n");
+	}*/
+	printf("*******************************\n");
+	printf("*****1.加法     2.减法    *****\n");
+	printf("*****3.乘法     4.除法    *****\n");
+	printf("*******************************\n");
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	printf("请选择模式\n");
+	scanf("%d", &i);
+	getchar;
+	int(*p[])(int, int) = { 0, Add, Sub, Mul, Div };
+	printf("请输入俩个操作数\n");
+	scanf("%d%d", &j, &k);
+	getchar;
+	printf("结果是：%d\n", p[i](j,k));
+
+	return 0;
+}
